@@ -13,17 +13,12 @@ let duration = 500;
 let downInterval;
 let tempMovingItem;
 
-
 const movingItem = {
     type: "",
     direction: 0,
     top: 0,
     left: 3,
 };
-
-
-init()
-
 function init(){
     tempMovingItem = { ...movingItem };
     for(let i = 0; i < GAME_ROWS; i++){
@@ -31,22 +26,16 @@ function init(){
     }
     generateNewBlock()
 }
-
-for(let i =0; i<20; i++){
-   prependNewLine()
-}
-
 function prependNewLine(){
     const li = document.createElement("li");
     const ul = document.createElement("ul");
-    for(let j = 0; j < 10; j++){
+    for(let j = 0; j < GAME_COLS; j++){
         const matrix = document.createElement("li");
         ul.prepend(matrix);
     }
     li.prepend(ul)
     playground.prepend(li)
 }
-
 function renderBlocks(moveType=""){
     const { type, direction, top, left } = tempMovingItem;
     //렌더링
@@ -59,7 +48,7 @@ function renderBlocks(moveType=""){
         const y = block[1]  + top;
         //조건? 참일경우 : 거짓일경우
         const target = playground.childNodes[y] ? playground.childNodes[y].childNodes[0].childNodes[x] : null;
-        const isAvailabe = checkEmpty(target);
+        const isAvailable = checkEmpty(target);
         if (isAvailable) {
             target.classList.add(type, "moving")
         } else {
@@ -83,9 +72,8 @@ function renderBlocks(moveType=""){
     movingItem.top  = top;
     movingItem.direction = direction;
 }
-
 function seizeBlock(){
-    const movingBloks = document.querySelectorAll(".moving");
+    const movingBlocks = document.querySelectorAll(".moving");
     movingBlocks.forEach(moving => {
         moving.classList.remove("moving");
         moving.classList.add("seized");
@@ -100,7 +88,7 @@ function checkMatch(){
         let matched = true;
         child.children[0].childNodes.forEach(li=>{
             if(li.classList.contains("seized")){
-                    mached = false;
+                    matched = false;
             }
         })
         if(matched){
@@ -112,7 +100,6 @@ function checkMatch(){
     })
     generateNewBlock()
 }
-
 function generateNewBlock(){
 
     clearInterval(downInterval);
@@ -130,19 +117,16 @@ function generateNewBlock(){
     tempMovingItem = {...movingItem};
     renderBlocks()
 }
-
 function checkEmpty(target){
     if(!target || target.classList.contains("seized")){
         return false;
     }
     return true;
 }
-
 function moveBlock(moveType, amount){
     tempMovingItem[moveType] += amount;
     renderBlocks(moveType)
 }
-
 function changeDirection(){
     const direction = tempMovingItem.direction;
     direction === 3 ? tempMovingItem.direction = 0 : tempMovingItem.direction+=1;
@@ -157,12 +141,9 @@ function dropBlock(){
         moveBlock("top",1)
     }, 10)
 }
-
-function showGameovertext(){
-    gameText.getElementsByClassName.display = "flex"
+function showGameoverText(){
+    gameText.style.display = "flex"
 }
-
-
 // event handling
 document.addEventListener("keydown", e=> {
     switch(e.keyCode){
@@ -170,7 +151,7 @@ document.addEventListener("keydown", e=> {
             moveBlock("left", 1);
             break;
             case 37:
-                moveblock("left", -1);
+                moveBlock("left", -1);
                 break;
             case 40:
                 moveBlock("top", 1);
@@ -185,7 +166,6 @@ document.addEventListener("keydown", e=> {
             break;
     }
 })
-
 restartButton.addEventListener("click",()=>{
     playground.innerHTML = "";
     gameText.style.display = "none"
